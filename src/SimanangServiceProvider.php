@@ -2,10 +2,11 @@
 
 namespace Rangkotodotcom\Simanang;
 
-use Illuminate\Foundation\Application as LaravelApplication;
-use Illuminate\Support\ServiceProvider;
 use Rangkotodotcom\Simanang\Simanang;
+use Illuminate\Support\ServiceProvider;
+use Rangkotodotcom\Simanang\Networks\HttpClient;
 use Laravel\Lumen\Application as LumenApplication;
+use Illuminate\Foundation\Application as LaravelApplication;
 
 /**
  * Class SimanangServiceProvider
@@ -26,22 +27,10 @@ class SimanangServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->bind('simanang-mode', function ($app) {
-            return new Simanang(
-                config('simanang.simanang_mode')
-            );
-        });
+        $this->mergeConfigFrom(__DIR__ . '/../config/simanang.php', 'simanang');
 
-        $this->app->bind('simanang-client', function ($app) {
-            return new Simanang(
-                config('simanang.simanang_client_id')
-            );
-        });
-
-        $this->app->bind('simanang-secret', function ($app) {
-            return new Simanang(
-                config('simanang.simanang_client_secret')
-            );
+        $this->app->singleton('simanang', function () {
+            return new Simanang(new HttpClient(config('simanang.simanang_mode'), config('simanang.simanang_client_id'), config('simanang.simanang_client_secret')));
         });
     }
 }

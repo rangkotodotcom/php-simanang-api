@@ -32,6 +32,10 @@
         "illuminate/http": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
         "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0"
     },
+    "require-dev": {
+        "orchestra/testbench": "^6.25",
+        "phpunit/phpunit": "^9.0"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.x-dev"
@@ -41,7 +45,7 @@
                 "Rangkotodotcom\\Simanang\\SimanangServiceProvider"
             ],
             "aliases": {
-                "Simanang": "Rangkotodotcom\\Simanang\\Facades\\Simanang"
+                "Simanang": "Rangkotodotcom\\Simanang\\SimanangFacade"
             }
         }
     },
