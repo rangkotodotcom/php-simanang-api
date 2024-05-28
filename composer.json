@@ -1,0 +1,55 @@
+{
+    "name": "rangkotodotcom/simanang",
+    "description": "An http client library to connect to the SIMANANG API",
+    "type": "library",
+    "keywords": [
+        "laravel",
+        "php",
+        "simanang"
+    ],
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Rangkotodotcom\\Simanang\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rangkotodotcom\\Simanang\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jamilur Rusydi",
+            "email": "softj4m98@gmail.com"
+        }
+    ],
+    "require": {
+        "ext-json": "*",
+        "php": "^7.3|^8.0",
+        "fruitcake/laravel-cors": "^2.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "illuminate/contracts": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/http": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "master"
+        },
+        "laravel": {
+            "providers": [
+                "Rangkotodotcom\\Simanang\\SimanangServiceProvider"
+            ],
+            "aliases": {
+                "Simanang": "Rangkotodotcom\\Simanang\\Facades\\Simanang"
+            }
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
