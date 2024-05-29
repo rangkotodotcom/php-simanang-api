@@ -49,7 +49,6 @@ class HttpClient
             if ($decJsonToken->expired_time > time()) {
                 $token = $decJsonToken->token;
                 $this->_accessToken = $token;
-                return;
             }
         } else {
             try {
