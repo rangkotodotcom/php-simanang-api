@@ -28,6 +28,30 @@ class Simanang
         return collect($result);
     }
 
+    public function getVision(): Collection
+    {
+        $endpoint = '/api/school/vision';
+        $result = $this->httpClient->sendRequest('GET', $endpoint);
+
+        return collect($result);
+    }
+
+    public function getMision(): Collection
+    {
+        $endpoint = '/api/school/mision';
+        $result = $this->httpClient->sendRequest('GET', $endpoint);
+
+        return collect($result);
+    }
+
+    public function getGallery(): Collection
+    {
+        $endpoint = '/api/school/gallery';
+        $result = $this->httpClient->sendRequest('GET', $endpoint);
+
+        return collect($result);
+    }
+
     public function getHeadMaster(): Collection
     {
         $endpoint = '/api/school/headmaster';
