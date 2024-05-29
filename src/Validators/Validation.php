@@ -1,6 +1,6 @@
 <?php
 
-namespace Rangkotodotcom\Simanang\Validator;
+namespace Rangkotodotcom\Simanang\Validators;
 
 interface Validation
 {

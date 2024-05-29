@@ -1,6 +1,6 @@
 <?php
 
-namespace Rangkotodotcom\Simanang\Validator;
+namespace Rangkotodotcom\Simanang\Validators;
 
 use Illuminate\Support\Facades\Validator;
 use Rangkotodotcom\Simanang\Exceptions\SimanangValidationException;

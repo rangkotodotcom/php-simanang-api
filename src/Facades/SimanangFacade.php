@@ -1,6 +1,6 @@
 <?php
 
-namespace Rangkotodotcom\Simanang;
+namespace Rangkotodotcom\Simanang\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
