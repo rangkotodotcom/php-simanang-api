@@ -37,9 +37,6 @@
         "phpunit/phpunit": "^9.0"
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "1.x-dev"
-        },
         "laravel": {
             "providers": [
                 "Rangkotodotcom\\Simanang\\SimanangServiceProvider"
