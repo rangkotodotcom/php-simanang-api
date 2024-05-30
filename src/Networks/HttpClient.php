@@ -15,7 +15,7 @@ class HttpClient
     const HTTP_DELETE = 'DELETE';
 
     protected $productionUrl = 'https://simanang.sman1el.sch.id';
-    protected $sandboxUrl = 'https://sandbox-simanang.sman1el.sch.id';
+    protected $sandboxUrl = 'https://staging-simanang.sman1el.sch.id';
     protected $baseUrl;
     protected $tokenUrl;
 
@@ -90,28 +90,28 @@ class HttpClient
     public function sendRequest(string $method, string $endpoint, array $data = [])
     {
         if ($method == self::HTTP_GET) {
-            return $this->sendGetRequest($endpoint, $data);
+            return $this->sendGetRequest($this->baseUrl . $endpoint, $data);
         }
 
         if ($method == self::HTTP_POST) {
-            return $this->sendPostRequest($endpoint, $data);
+            return $this->sendPostRequest($this->baseUrl . $endpoint, $data);
         }
 
         if ($method == self::HTTP_PUT) {
-            return $this->sendPutRequest($endpoint, $data);
+            return $this->sendPutRequest($this->baseUrl . $endpoint, $data);
         }
 
         if ($method == self::HTTP_DELETE) {
-            return $this->sendDeleteRequest($endpoint, $data);
+            return $this->sendDeleteRequest($this->baseUrl . $endpoint, $data);
         }
 
         throw new InvalidArgumentException(sprintf("http method %s tidak didukung.", $method));
     }
 
-    protected function sendGetRequest(string $endpoint, array $data)
+    protected function sendGetRequest(string $fullEndPoint, array $data)
     {
         try {
-            $response = Http::withToken($this->_accessToken)->get($endpoint, $data);
+            $response = Http::withToken($this->_accessToken)->get($fullEndPoint, $data);
 
             if ($response->successful()) {
                 $body = $response->body();
@@ -130,10 +130,10 @@ class HttpClient
     }
 
 
-    protected function sendPostRequest(string $endpoint, array $data = [])
+    protected function sendPostRequest(string $fullEndPoint, array $data = [])
     {
         try {
-            $response = Http::withToken($this->_accessToken)->acceptJson()->post($endpoint, $data);
+            $response = Http::withToken($this->_accessToken)->acceptJson()->post($fullEndPoint, $data);
 
             if ($response->successful()) {
                 $body = $response->body();
@@ -151,10 +151,10 @@ class HttpClient
         }
     }
 
-    protected function sendPutRequest(string $endpoint, array $data = [])
+    protected function sendPutRequest(string $fullEndPoint, array $data = [])
     {
         try {
-            $response = Http::withToken($this->_accessToken)->acceptJson()->put($endpoint, $data);
+            $response = Http::withToken($this->_accessToken)->acceptJson()->put($fullEndPoint, $data);
 
             if ($response->successful()) {
                 $body = $response->body();
@@ -172,10 +172,10 @@ class HttpClient
         }
     }
 
-    protected function sendDeleteRequest(string $endpoint, array $data = [])
+    protected function sendDeleteRequest(string $fullEndPoint, array $data = [])
     {
         try {
-            $response = Http::withToken($this->_accessToken)->acceptJson()->delete($endpoint, $data);
+            $response = Http::withToken($this->_accessToken)->acceptJson()->delete($fullEndPoint, $data);
 
             if ($response->successful()) {
                 $body = $response->body();
