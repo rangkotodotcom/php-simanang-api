@@ -37,7 +37,7 @@ class QrCodePresence implements QrCode
     {
         $validated = QrCodePresenceFormValidation::validate($data);
 
-        $this->response = $this->httpClient->sendRequest('GET', 'api/presence/validation/' . $validated['qr_code']);
+        $this->response = $this->httpClient->sendRequest('GET', 'api/presence/validation/' . $validated['qrcode']);
 
         return $this;
     }

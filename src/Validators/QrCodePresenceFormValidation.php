@@ -15,7 +15,7 @@ class QrCodePresenceFormValidation implements Validation
     public static function validate(array $data): array
     {
         $validator = Validator::make($data, [
-            'qr_code'   => 'bail|required|string'
+            'qrcode'   => 'bail|required|string'
         ]);
 
         if ($validator->fails()) {
