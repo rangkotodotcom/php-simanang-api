@@ -5,7 +5,7 @@ namespace Rangkotodotcom\Simanang\Validators;
 use Illuminate\Support\Facades\Validator;
 use Rangkotodotcom\Simanang\Exceptions\SimanangValidationException;
 
-class PresenceFormValidation implements Validation
+class QrCodePresenceFormValidation implements Validation
 {
     /**
      * @param array $data
@@ -15,7 +15,7 @@ class PresenceFormValidation implements Validation
     public static function validate(array $data): array
     {
         $validator = Validator::make($data, [
-            'qr_code' => 'bail|required|string',
+            'qr_code'   => 'bail|required|string'
         ]);
 
         if ($validator->fails()) {

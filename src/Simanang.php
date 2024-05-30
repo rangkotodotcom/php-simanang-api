@@ -4,6 +4,9 @@ namespace Rangkotodotcom\Simanang;
 
 use Illuminate\Support\Collection;
 use Rangkotodotcom\Simanang\Networks\HttpClient;
+use Rangkotodotcom\Simanang\Services\QrCodes\QrCode;
+use Rangkotodotcom\Simanang\Exceptions\InvalidQrCodeException;
+use Rangkotodotcom\Simanang\Services\QrCodes\QrCodePresence;
 
 class Simanang
 {
@@ -92,5 +95,25 @@ class Simanang
         $result = $this->httpClient->sendRequest('GET', $endpoint, $data);
 
         return collect($result);
+    }
+
+    public function validasiQrCode(array $data, string $typeQrCode): QrCode
+    {
+        if ($typeQrCode == 'presence') {
+            $handler = new QrCodePresence($this->httpClient);
+            return $handler->validationQrCode($data);
+        }
+
+        throw new InvalidQrCodeException("metode yang digunakan tidak didukung.");
+    }
+
+    public function storeQrCode(array $data, string $typeQrCode): QrCode
+    {
+        if ($typeQrCode == 'presence') {
+            $handler = new QrCodePresence($this->httpClient);
+            return $handler->storeQrCode($data);
+        }
+
+        throw new InvalidQrCodeException("metode yang digunakan tidak didukung.");
     }
 }
