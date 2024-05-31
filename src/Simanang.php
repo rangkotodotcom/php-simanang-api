@@ -97,6 +97,19 @@ class Simanang
         return collect($result);
     }
 
+    public function getSubject(string $param = null): Collection
+    {
+        if ($param == null) {
+            $endpoint = '/api/v1/subject';
+        } else {
+            $endpoint = '/api/v1/subject/' . $param;
+        }
+
+        $result = $this->httpClient->sendRequest('GET', $endpoint);
+
+        return collect($result);
+    }
+
     public function validasiQrCode(array $data, string $typeQrCode): QrCode
     {
         if ($typeQrCode == 'presence') {

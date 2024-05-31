@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Rangkotodotcom\Simanang getCurrentSemester()
  * @method static \Rangkotodotcom\Simanang getStudent(string $param = null, array $data)
  * @method static \Rangkotodotcom\Simanang getTeacher(string $param = null, array $data)
+ * @method static \Rangkotodotcom\Simanang getSubject(string $param = null)
  * @method static \Rangkotodotcom\Simanang validasiQrCode(array $data, string $typeQrCode)
  * @method static \Rangkotodotcom\Simanang storeQrCode(array $data, string $typeQrCode)
  *
