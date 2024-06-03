@@ -5,6 +5,7 @@ namespace Rangkotodotcom\Simanang\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
+ * @method static \Rangkotodotcom\Simanang connect()
  * @method static \Rangkotodotcom\Simanang getSchool()
  * @method static \Rangkotodotcom\Simanang getVision()
  * @method static \Rangkotodotcom\Simanang getMision()

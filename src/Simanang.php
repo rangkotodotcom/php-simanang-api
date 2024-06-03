@@ -23,6 +23,11 @@ class Simanang
         $this->httpClient = $httpClient;
     }
 
+    public function connect(): bool
+    {
+        return $this->httpClient->checkConnection();
+    }
+
     public function getSchool(): Collection
     {
         $endpoint = '/api/school';

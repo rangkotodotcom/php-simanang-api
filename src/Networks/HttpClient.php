@@ -3,6 +3,7 @@
 namespace Rangkotodotcom\Simanang\Networks;
 
 use Exception;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Illuminate\Support\Facades\Http;
 use League\Config\Exception\InvalidConfigurationException;
@@ -15,12 +16,13 @@ class HttpClient
     const HTTP_DELETE = 'DELETE';
 
     protected $productionUrl = 'https://simanang.sman1el.sch.id';
-    protected $sandboxUrl = 'https://staging-simanang.sman1el.sch.id';
+    protected $stagingUrl = 'https://staging-simanang.sman1el.sch.id';
     protected $baseUrl;
     protected $tokenUrl;
 
     protected $_accessToken;
     protected $_expiredIn;
+    protected $_isConnected;
 
     public function __construct(string $mode, string $clientId, string $clientSecret)
     {
@@ -32,51 +34,69 @@ class HttpClient
             throw new InvalidConfigurationException("Client ID atau Client Secret belum dikonfigurasi");
         }
 
-        $this->baseUrl = $mode == 'production' ? $this->productionUrl : $this->sandboxUrl;
+        $this->baseUrl = $mode == 'production' ? $this->productionUrl : $this->stagingUrl;
         $this->tokenUrl = $this->baseUrl . '/oauth/token';
 
-        $path = base_path('json');
-
-        if (!file_exists($path)) {
-            mkdir($path, 0755);
-        }
-
-        if (file_exists($path . '/simanang_token.json')) {
-            $jsonToken = file_get_contents($path . '/simanang_token.json');
-
-            $decJsonToken = json_decode($jsonToken);
-
-            if ($decJsonToken->expired_time > time()) {
-                $token = $decJsonToken->token;
-                $this->_accessToken = $token;
+        $explodeDomain = explode('/', Str::remove(':', $this->baseUrl));
+        if ($explodeDomain[0] != '') {
+            $port = $explodeDomain[0] == 'https' ? 443 : 80;
+            $domain = $explodeDomain[2];
+            $connected = @fsockopen($domain, $port);
+            if ($connected) {
+                $this->_isConnected = true;
+            } else {
+                $this->_isConnected = false;
             }
         } else {
-            try {
-                $response = Http::asForm()->post($this->tokenUrl, [
-                    "client_id"         => $clientId,
-                    "client_secret"     => $clientSecret,
-                    "grant_type"        => "client_credentials"
-                ]);
+            $this->_isConnected = false;
+        }
 
-                if ($response->successful()) {
-                    $decResponse = json_decode($response->getBody());
-                    $this->_accessToken = $decResponse->access_token;
-                    $this->_expiredIn = $decResponse->expires_in;
+        if ($this->_isConnected) {
+            $path = base_path('json');
 
-                    $token = $this->_accessToken;
-
-                    $dataJsonToken = [
-                        'expired_time'  => time() + $this->_expiredIn,
-                        'token'         => $token
-                    ];
-
-                    $encJsonPost = json_encode($dataJsonToken);
-
-                    file_put_contents($path . '/simanang_token.json', $encJsonPost);
-                }
-            } catch (Exception $e) {
-                throw new Exception($e->getMessage());
+            if (!file_exists($path)) {
+                mkdir($path, 0755);
             }
+
+            if (file_exists($path . '/simanang_token.json')) {
+                $jsonToken = file_get_contents($path . '/simanang_token.json');
+
+                $decJsonToken = json_decode($jsonToken);
+
+                if ($decJsonToken->expired_time > time()) {
+                    $token = $decJsonToken->token;
+                    $this->_accessToken = $token;
+                }
+            } else {
+                try {
+                    $response = Http::asForm()->post($this->tokenUrl, [
+                        "client_id"         => $clientId,
+                        "client_secret"     => $clientSecret,
+                        "grant_type"        => "client_credentials"
+                    ]);
+
+                    if ($response->successful()) {
+                        $decResponse = json_decode($response->getBody());
+                        $this->_accessToken = $decResponse->access_token;
+                        $this->_expiredIn = $decResponse->expires_in;
+
+                        $token = $this->_accessToken;
+
+                        $dataJsonToken = [
+                            'expired_time'  => time() + $this->_expiredIn,
+                            'token'         => $token
+                        ];
+
+                        $encJsonPost = json_encode($dataJsonToken);
+
+                        file_put_contents($path . '/simanang_token.json', $encJsonPost);
+                    }
+                } catch (Exception $e) {
+                    throw new Exception($e->getMessage());
+                }
+            }
+        } else {
+            throw new Exception('Failed connect to SIMANANG Server : ' . $this->baseUrl);
         }
     }
 
@@ -128,7 +148,6 @@ class HttpClient
             ];
         }
     }
-
 
     protected function sendPostRequest(string $fullEndPoint, array $data = [])
     {
@@ -191,5 +210,10 @@ class HttpClient
                 'message'   => $e->getMessage()
             ];
         }
+    }
+
+    public function checkConnection()
+    {
+        return $this->_isConnected;
     }
 }
