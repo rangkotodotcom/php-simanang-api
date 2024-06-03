@@ -76,7 +76,7 @@ class Simanang
         return collect($result);
     }
 
-    public function getStudent(string $param = null, array $data): Collection
+    public function getStudent(string $param = null, array $data = []): Collection
     {
         if ($param == null) {
             $endpoint = '/api/v1/student';
@@ -89,7 +89,7 @@ class Simanang
         return collect($result);
     }
 
-    public function getTeacher(string $param = null, array $data): Collection
+    public function getTeacher(string $param = null, array $data = []): Collection
     {
         if ($param == null) {
             $endpoint = '/api/v1/teacher';

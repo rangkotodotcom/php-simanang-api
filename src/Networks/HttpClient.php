@@ -149,7 +149,7 @@ class HttpClient
         }
     }
 
-    protected function sendPostRequest(string $fullEndPoint, array $data = [])
+    protected function sendPostRequest(string $fullEndPoint, array $data)
     {
         try {
             $response = Http::withToken($this->_accessToken)->acceptJson()->post($fullEndPoint, $data);
@@ -170,7 +170,7 @@ class HttpClient
         }
     }
 
-    protected function sendPutRequest(string $fullEndPoint, array $data = [])
+    protected function sendPutRequest(string $fullEndPoint, array $data)
     {
         try {
             $response = Http::withToken($this->_accessToken)->acceptJson()->put($fullEndPoint, $data);
@@ -191,7 +191,7 @@ class HttpClient
         }
     }
 
-    protected function sendDeleteRequest(string $fullEndPoint, array $data = [])
+    protected function sendDeleteRequest(string $fullEndPoint, array $data)
     {
         try {
             $response = Http::withToken($this->_accessToken)->acceptJson()->delete($fullEndPoint, $data);
