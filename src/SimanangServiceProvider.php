@@ -19,7 +19,7 @@ class SimanangServiceProvider extends ServiceProvider
         if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config/simanang.php' => config_path('simanang.php'),
-            ], 'simanang-config');
+            ], 'config');
         } elseif ($this->app instanceof LumenApplication) {
             $this->app->configure('simanang');
         }
