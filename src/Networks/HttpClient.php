@@ -19,7 +19,7 @@ class HttpClient
     protected $stagingUrl = 'https://staging-simanang.sman1el.sch.id';
     protected $clientId;
     protected $clientSecret;
-    protected $baseUrl;
+    protected $baseUrl = 'http://localhost';
     protected $tokenUrl;
 
     protected $_accessToken;
@@ -36,7 +36,14 @@ class HttpClient
             throw new InvalidConfigurationException("Client ID atau Client Secret belum dikonfigurasi");
         }
 
-        $this->baseUrl = $mode == 'production' ? $this->productionUrl : $this->stagingUrl;
+        if ($mode == 'production') {
+            $this->baseUrl = $this->productionUrl;
+        }
+
+        if ($mode == 'development') {
+            $this->baseUrl = $this->stagingUrl;
+        }
+
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->tokenUrl = $this->baseUrl . '/oauth/token';
@@ -182,12 +189,14 @@ class HttpClient
             }
             $response->toException();
 
+            $response = json_decode($response);
+
             if ($response->code == 401) {
                 $this->getAccessToken(true);
                 return $this->sendGetRequest($fullEndPoint, $data);
             }
 
-            return json_decode($response);
+            return $response;
         } catch (Exception $e) {
             return (object)[
                 'status'    => false,
@@ -208,12 +217,14 @@ class HttpClient
             }
             $response->toException();
 
+            $response = json_decode($response);
+
             if ($response->code == 401) {
                 $this->getAccessToken(true);
                 return $this->sendPostRequest($fullEndPoint, $data);
             }
 
-            return json_decode($response);
+            return $response;
         } catch (Exception $e) {
             return (object)[
                 'status'    => false,
@@ -234,12 +245,14 @@ class HttpClient
             }
             $response->toException();
 
+            $response = json_decode($response);
+
             if ($response->code == 401) {
                 $this->getAccessToken(true);
                 return $this->sendPutRequest($fullEndPoint, $data);
             }
 
-            return json_decode($response);
+            return $response;
         } catch (Exception $e) {
             return (object)[
                 'status'    => false,
@@ -260,12 +273,14 @@ class HttpClient
             }
             $response->toException();
 
+            $response = json_decode($response);
+
             if ($response->code == 401) {
                 $this->getAccessToken(true);
                 return $this->sendDeleteRequest($fullEndPoint, $data);
             }
 
-            return json_decode($response);
+            return $response;
         } catch (Exception $e) {
             return (object)[
                 'status'    => false,
