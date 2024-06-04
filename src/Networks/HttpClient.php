@@ -17,6 +17,8 @@ class HttpClient
 
     protected $productionUrl = 'https://simanang.sman1el.sch.id';
     protected $stagingUrl = 'https://staging-simanang.sman1el.sch.id';
+    protected $clientId;
+    protected $clientSecret;
     protected $baseUrl;
     protected $tokenUrl;
 
@@ -35,6 +37,8 @@ class HttpClient
         }
 
         $this->baseUrl = $mode == 'production' ? $this->productionUrl : $this->stagingUrl;
+        $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
         $this->tokenUrl = $this->baseUrl . '/oauth/token';
 
         $explodeDomain = explode('/', Str::remove(':', $this->baseUrl));
@@ -52,51 +56,89 @@ class HttpClient
         }
 
         if ($this->_isConnected) {
-            $path = base_path('json');
-
-            if (!file_exists($path)) {
-                mkdir($path, 0755);
-            }
-
-            if (file_exists($path . '/simanang_token.json')) {
-                $jsonToken = file_get_contents($path . '/simanang_token.json');
-
-                $decJsonToken = json_decode($jsonToken);
-
-                if ($decJsonToken->expired_time > time()) {
-                    $token = $decJsonToken->token;
-                    $this->_accessToken = $token;
-                }
-            } else {
-                try {
-                    $response = Http::asForm()->post($this->tokenUrl, [
-                        "client_id"         => $clientId,
-                        "client_secret"     => $clientSecret,
-                        "grant_type"        => "client_credentials"
-                    ]);
-
-                    if ($response->successful()) {
-                        $decResponse = json_decode($response->getBody());
-                        $this->_accessToken = $decResponse->access_token;
-                        $this->_expiredIn = $decResponse->expires_in;
-
-                        $token = $this->_accessToken;
-
-                        $dataJsonToken = [
-                            'expired_time'  => time() + $this->_expiredIn,
-                            'token'         => $token
-                        ];
-
-                        $encJsonPost = json_encode($dataJsonToken);
-
-                        file_put_contents($path . '/simanang_token.json', $encJsonPost);
-                    }
-                } catch (Exception $e) {
-                    throw new Exception($e->getMessage());
-                }
-            }
+            $this->getAccessToken();
         } else {
             throw new Exception('Failed connect to SIMANANG Server : ' . $this->baseUrl);
+        }
+    }
+
+    protected function getAccessToken(bool $isRefresh = false)
+    {
+        $path = base_path('json');
+
+        if (!file_exists($path)) {
+            mkdir($path, 0755);
+        }
+
+        if ($isRefresh) {
+            try {
+                $response = Http::asForm()->post($this->tokenUrl, [
+                    "client_id"         => $this->clientId,
+                    "client_secret"     => $this->clientSecret,
+                    "grant_type"        => "client_credentials"
+                ]);
+
+                if ($response->successful()) {
+                    $decResponse = json_decode($response->getBody());
+                    $this->_accessToken = $decResponse->access_token;
+                    $this->_expiredIn = $decResponse->expires_in;
+
+                    $token = $this->_accessToken;
+
+                    $dataJsonToken = [
+                        'expired_time'  => (time() + $this->_expiredIn) - 3600,
+                        'token'         => $token
+                    ];
+
+                    $encJsonPost = json_encode($dataJsonToken);
+
+                    file_put_contents($path . '/simanang_token.json', $encJsonPost);
+                }
+            } catch (Exception $e) {
+                throw new Exception($e->getMessage());
+            }
+
+            return;
+        }
+
+
+
+        if (file_exists($path . '/simanang_token.json')) {
+            $jsonToken = file_get_contents($path . '/simanang_token.json');
+
+            $decJsonToken = json_decode($jsonToken);
+
+            if ($decJsonToken->expired_time > time()) {
+                $token = $decJsonToken->token;
+                $this->_accessToken = $token;
+            }
+        } else {
+            try {
+                $response = Http::asForm()->post($this->tokenUrl, [
+                    "client_id"         => $this->clientId,
+                    "client_secret"     => $this->clientSecret,
+                    "grant_type"        => "client_credentials"
+                ]);
+
+                if ($response->successful()) {
+                    $decResponse = json_decode($response->getBody());
+                    $this->_accessToken = $decResponse->access_token;
+                    $this->_expiredIn = $decResponse->expires_in;
+
+                    $token = $this->_accessToken;
+
+                    $dataJsonToken = [
+                        'expired_time'  => (time() + $this->_expiredIn) - 3600,
+                        'token'         => $token
+                    ];
+
+                    $encJsonPost = json_encode($dataJsonToken);
+
+                    file_put_contents($path . '/simanang_token.json', $encJsonPost);
+                }
+            } catch (Exception $e) {
+                throw new Exception($e->getMessage());
+            }
         }
     }
 
@@ -140,6 +182,11 @@ class HttpClient
             }
             $response->toException();
 
+            if ($response->code == 401) {
+                $this->getAccessToken(true);
+                return $this->sendGetRequest($fullEndPoint, $data);
+            }
+
             return json_decode($response);
         } catch (Exception $e) {
             return (object)[
@@ -160,6 +207,11 @@ class HttpClient
                 return json_decode($body);
             }
             $response->toException();
+
+            if ($response->code == 401) {
+                $this->getAccessToken(true);
+                return $this->sendPostRequest($fullEndPoint, $data);
+            }
 
             return json_decode($response);
         } catch (Exception $e) {
@@ -182,6 +234,11 @@ class HttpClient
             }
             $response->toException();
 
+            if ($response->code == 401) {
+                $this->getAccessToken(true);
+                return $this->sendPutRequest($fullEndPoint, $data);
+            }
+
             return json_decode($response);
         } catch (Exception $e) {
             return (object)[
@@ -202,6 +259,11 @@ class HttpClient
                 return json_decode($body);
             }
             $response->toException();
+
+            if ($response->code == 401) {
+                $this->getAccessToken(true);
+                return $this->sendDeleteRequest($fullEndPoint, $data);
+            }
 
             return json_decode($response);
         } catch (Exception $e) {
