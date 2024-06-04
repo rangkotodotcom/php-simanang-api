@@ -38,7 +38,7 @@ If you want to make use of the facade you must install it as well :
 Next, You must publish the config file to define your SIMANANG CREDENTIAL :
 
 ```bash
-php artisan vendor:publish --tag="simanang-config"
+php artisan vendor:publish --provider="Rangkotodotcom\Simanang\SimanangServiceProvider"
 ```
 This is the contents of the published file :
 
