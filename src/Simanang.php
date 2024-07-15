@@ -122,7 +122,7 @@ class Simanang
             return $handler->validationQrCode($data);
         }
 
-        throw new InvalidQrCodeException("metode yang digunakan tidak didukung.");
+        throw new InvalidQrCodeException("Invalid Type Qr Code");
     }
 
     public function storeQrCode(array $data, string $typeQrCode): QrCode
@@ -132,6 +132,6 @@ class Simanang
             return $handler->storeQrCode($data);
         }
 
-        throw new InvalidQrCodeException("metode yang digunakan tidak didukung.");
+        throw new InvalidQrCodeException("Invalid Type Qr Code");
     }
 }

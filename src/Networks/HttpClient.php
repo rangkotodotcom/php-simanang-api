@@ -174,7 +174,7 @@ class HttpClient
             return $this->sendDeleteRequest($this->baseUrl . $endpoint, $data);
         }
 
-        throw new InvalidArgumentException(sprintf("http method %s tidak didukung.", $method));
+        throw new InvalidArgumentException(sprintf("http method %s not supported", $method));
     }
 
     protected function sendGetRequest(string $fullEndPoint, array $data)
