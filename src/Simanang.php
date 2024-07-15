@@ -115,21 +115,23 @@ class Simanang
         return collect($result);
     }
 
-    public function validasiQrCode(array $data, string $typeQrCode): QrCode
+    public function validasiQrCode(array $data, string $typeQrCode): Collection
     {
         if ($typeQrCode == 'presence') {
             $handler = new QrCodePresence($this->httpClient);
-            return $handler->validationQrCode($data);
+            $handler->validationQrCode($data);
+            return $handler->getResponse();
         }
 
         throw new InvalidQrCodeException("Invalid Type Qr Code");
     }
 
-    public function storeQrCode(array $data, string $typeQrCode): QrCode
+    public function storeQrCode(array $data, string $typeQrCode): Collection
     {
         if ($typeQrCode == 'presence') {
             $handler = new QrCodePresence($this->httpClient);
-            return $handler->storeQrCode($data);
+            $handler->storeQrCode($data);
+            return $handler->getResponse();
         }
 
         throw new InvalidQrCodeException("Invalid Type Qr Code");

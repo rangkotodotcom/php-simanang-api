@@ -88,7 +88,7 @@ class HttpClient
                 if ($response->successful()) {
                     $decResponse = json_decode($response->getBody());
                     $this->_accessToken = $decResponse->access_token;
-                    $this->_expiredIn = $decResponse->expires_in;
+                    $this->_expiredIn = $decResponse->expired_in;
 
                     $token = $this->_accessToken;
 
@@ -130,7 +130,7 @@ class HttpClient
                 if ($response->successful()) {
                     $decResponse = json_decode($response->getBody());
                     $this->_accessToken = $decResponse->access_token;
-                    $this->_expiredIn = $decResponse->expires_in;
+                    $this->_expiredIn = $decResponse->expired_in;
 
                     $token = $this->_accessToken;
 

@@ -16,9 +16,9 @@ class QrCodePresence implements QrCode
     protected $httpClient;
 
     /**
-     * @var string
+     * @var object
      */
-    protected string $response;
+    protected object $response;
 
     /**
      * @param HttpClient $httpClient
@@ -37,7 +37,7 @@ class QrCodePresence implements QrCode
     {
         $validated = QrCodePresenceFormValidation::validate($data);
 
-        $this->response = $this->httpClient->sendRequest('GET', 'api/presence/validation/' . $validated['qrcode']);
+        $this->response = $this->httpClient->sendRequest('GET', '/api/presence/validasi/' . $validated['qrcode']);
 
         return $this;
     }
@@ -52,7 +52,7 @@ class QrCodePresence implements QrCode
     {
         $validated = QrCodePresenceFormValidation::validate($data);
 
-        $this->response = $this->httpClient->sendRequest('POST', 'api/presence', $validated);
+        $this->response = $this->httpClient->sendRequest('POST', '/api/presence', $validated);
 
         return $this;
     }
@@ -63,6 +63,6 @@ class QrCodePresence implements QrCode
      */
     public function getResponse(): Collection
     {
-        return collect(json_decode($this->response));
+        return collect($this->response);
     }
 }
