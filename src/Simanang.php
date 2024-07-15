@@ -4,9 +4,9 @@ namespace Rangkotodotcom\Simanang;
 
 use Illuminate\Support\Collection;
 use Rangkotodotcom\Simanang\Networks\HttpClient;
-use Rangkotodotcom\Simanang\Services\QrCodes\QrCode;
 use Rangkotodotcom\Simanang\Exceptions\InvalidQrCodeException;
 use Rangkotodotcom\Simanang\Services\QrCodes\QrCodePresence;
+use Rangkotodotcom\Simanang\Services\QrCodes\QrCodeProfile;
 
 class Simanang
 {
@@ -119,6 +119,10 @@ class Simanang
     {
         if ($typeQrCode == 'presence') {
             $handler = new QrCodePresence($this->httpClient);
+            $handler->validationQrCode($data);
+            return $handler->getResponse();
+        } else if ($typeQrCode == 'profile') {
+            $handler = new QrCodeProfile($this->httpClient);
             $handler->validationQrCode($data);
             return $handler->getResponse();
         }
