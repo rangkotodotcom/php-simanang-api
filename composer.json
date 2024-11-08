@@ -1,5 +1,6 @@
 {
     "name": "rangkotodotcom/simanang",
+    "version": "1.0.1",
     "description": "An http client library to connect to the SIMANANG API",
     "type": "library",
     "keywords": [
