@@ -4,9 +4,10 @@ namespace Rangkotodotcom\Simanang;
 
 use Illuminate\Support\Collection;
 use Rangkotodotcom\Simanang\Networks\HttpClient;
-use Rangkotodotcom\Simanang\Exceptions\InvalidQrCodeException;
-use Rangkotodotcom\Simanang\Services\QrCodes\QrCodePresence;
 use Rangkotodotcom\Simanang\Services\QrCodes\QrCodeProfile;
+use Rangkotodotcom\Simanang\Services\QrCodes\QrCodePresence;
+use Rangkotodotcom\Simanang\Exceptions\InvalidQrCodeException;
+use Rangkotodotcom\Simanang\Validators\PushNotificationFormValidation;
 
 class Simanang
 {
@@ -139,5 +140,14 @@ class Simanang
         }
 
         throw new InvalidQrCodeException("Invalid Type Qr Code");
+    }
+
+    public function pushNotification(array $data): Collection
+    {
+        $validated = PushNotificationFormValidation::validate($data);
+
+        $result = $this->httpClient->sendRequest('POST', '/api/v1/notification' . $validated);
+
+        return collect($result);
     }
 }

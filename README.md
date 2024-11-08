@@ -12,6 +12,7 @@ You can install the package via composer:
 ```bash
 composer require rangkotodotcom/simanang
 ```
+
 #### Setup
 
 You must register the service provider :
@@ -35,11 +36,13 @@ If you want to make use of the facade you must install it as well :
     'Simanang' => Rangkotodotcom\Simanang\Simanang::class,
 ];
 ```
+
 Next, You must publish the config file to define your SIMANANG CREDENTIAL :
 
 ```bash
 php artisan vendor:publish --provider="Rangkotodotcom\Simanang\SimanangServiceProvider"
 ```
+
 This is the contents of the published file :
 
 ```php
@@ -112,6 +115,7 @@ SIMANANG_CLIENT_SECRET=putYourClientSecretHere
 
 - `::storeQrCode()`
 
+- `::pushNotification()`
 
 ### Testing
 
