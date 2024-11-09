@@ -146,7 +146,7 @@ class Simanang
     {
         $validated = PushNotificationFormValidation::validate($data);
 
-        $result = $this->httpClient->sendRequest('POST', '/api/v1/notification' . $validated);
+        $result = $this->httpClient->sendRequest('POST', '/api/v1/notification', $validated);
 
         return collect($result);
     }
